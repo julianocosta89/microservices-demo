@@ -85,7 +85,10 @@ run "-p 9555 -e PORT=9555 \
      " "$containername"
 
 containername=cartservice
-run "-p 7070 -e REDIS_ADDR=redis-cart:6379" "$containername"
+run "-p 7070 -e REDIS_ADDR=redis-cart:6379 \
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     " "$containername"
 
 containername=checkoutservice
 run "-p 5050 -e PORT=5050 \

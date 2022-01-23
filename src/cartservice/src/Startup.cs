@@ -9,6 +9,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using cartservice.cartstore;
 using cartservice.services;
+using OpenTelemetry.Trace;
 
 namespace cartservice
 {
@@ -25,6 +26,12 @@ namespace cartservice
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOpenTelemetryTracing((builder) => builder
+                .AddAspNetCoreInstrumentation()
+                .AddGrpcClientInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddOtlpExporter());
+                
             string redisAddress = Configuration["REDIS_ADDR"];
             ICartStore cartStore = null;
             if (!string.IsNullOrEmpty(redisAddress))

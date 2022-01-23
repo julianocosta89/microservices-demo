@@ -3,7 +3,6 @@
 # add vx to debug
 set -euo pipefail
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-networkName=online-boutique
 
 log() { echo "$1" >&2; }
 
@@ -28,6 +27,9 @@ check_network() {
 }
 
 TAG="${TAG:?TAG env variable must be specified}"
+networkName=online-boutique
+otelCollectorName=otelcollector
+otelCollector="http://$otelCollectorName:4317"
 
 check_network
 
@@ -50,6 +52,25 @@ done < <(find "${SCRIPTDIR}/../src" -mindepth 1 -maxdepth 1 -type d -print0)
 
 log "Successfully built all images."
 
+log "Deploying Otel-Collector and Jaeger:"
+
+docker run -d --rm --network="$networkName" --name jaeger \
+  -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
+  -p 5775:5775/udp \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 14250:14250 \
+  -p 14268:14268 \
+  -p 14269:14269 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:1.30 || true
+
+
+containername=$otelCollectorName
+run "" "$containername"
+
 log "Deploying Online Boutique:"
 
 containername=redis-cart
@@ -58,7 +79,10 @@ docker run -d --rm --network="$networkName" \
     --name "$containername" redis:alpine || true
 
 containername=adservice
-run "-p 9555 -e PORT=9555 -e DISABLE_STATS=1 -e DISABLE_TRACING=1" "$containername"
+run "-p 9555 -e PORT=9555 \
+     -e OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     " "$containername"
 
 containername=cartservice
 run "-p 7070 -e REDIS_ADDR=redis-cart:6379" "$containername"

@@ -14,3 +14,6 @@ done < <(find "${SCRIPTDIR}/../src" -mindepth 1 -maxdepth 1 -type d -print0)
 
 log "Killing: redis-cart"
 docker kill redis-cart || true
+
+log "Killing: jaeger"
+docker kill jaeger || true

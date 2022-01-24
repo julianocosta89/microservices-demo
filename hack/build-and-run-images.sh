@@ -92,13 +92,12 @@ run "-p 7070 -e REDIS_ADDR=redis-cart:6379 \
 
 containername=checkoutservice
 run "-p 5050 -e PORT=5050 \
-     -e DISABLE_STATS=1 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1 \
+     -e OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550 \
      -e SHIPPING_SERVICE_ADDR=shippingservice:50051 \
      -e PAYMENT_SERVICE_ADDR=paymentservice:50051 \
-     -e EMAIL_SERVICE_ADDR=emailservice:5000 \
+     -e EMAIL_SERVICE_ADDR=emailservice:8080 \
      -e CURRENCY_SERVICE_ADDR=currencyservice:7000 \
      -e CART_SERVICE_ADDR=cartservice:7070" "$containername"
 

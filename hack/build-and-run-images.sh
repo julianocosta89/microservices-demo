@@ -109,8 +109,10 @@ run "-p 7000 -e PORT=7000 \
 
 containername=emailservice
 run "-p 8080 -e PORT=8080 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1" "$containername"
+     -e OTEL_PYTHON_LOG_CORRELATION=true \
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     " "$containername"
 
 containername=frontend
 run "-p 8080:8080 -e PORT=8080 \

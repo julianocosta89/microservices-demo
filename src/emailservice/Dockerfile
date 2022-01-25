@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.7-slim as base
+FROM python:3.10-slim as base
 
 FROM base as builder
 
@@ -21,15 +21,14 @@ RUN apt-get -qq update \
         g++ \
     && rm -rf /var/lib/apt/lists/*
 
+FROM base as final
+
 # get packages
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-FROM base as final
 # Enable unbuffered logging
 ENV PYTHONUNBUFFERED=1
-# Enable Profiler
-ENV ENABLE_PROFILER=1
 
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
@@ -42,11 +41,8 @@ RUN GRPC_HEALTH_PROBE_VERSION=v0.4.6 && \
 
 WORKDIR /email_server
 
-# Grab packages from builder
-COPY --from=builder /usr/local/lib/python3.7/ /usr/local/lib/python3.7/
-
 # Add the application
 COPY . .
 
 EXPOSE 8080
-ENTRYPOINT [ "python", "email_server.py" ]
+ENTRYPOINT [ "opentelemetry-instrument", "python", "email_server.py" ]

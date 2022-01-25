@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import logging
-import os
 import sys
 from pythonjsonlogger import jsonlogger
 from opentelemetry import trace

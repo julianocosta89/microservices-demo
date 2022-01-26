@@ -116,8 +116,8 @@ run "-p 8080 -e PORT=8080 \
 
 containername=frontend
 run "-p 8080:8080 -e PORT=8080 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1 \
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550 \
      -e SHIPPING_SERVICE_ADDR=shippingservice:50051 \
      -e CURRENCY_SERVICE_ADDR=currencyservice:7000 \

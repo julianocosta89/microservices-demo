@@ -12,23 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.8-slim as base
-
-FROM base as builder
+FROM python:3.10-slim as base
 
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
-        g++
+        g++ \
+        python3-dev
 
 COPY requirements.txt .
 
-RUN pip install --prefix="/install" -r requirements.txt
-
-FROM base
+RUN pip install --prefix="/usr/local" -r requirements.txt
 
 WORKDIR /loadgen
-
-COPY --from=builder /install /usr/local
 
 # Add application code.
 COPY locustfile.py .

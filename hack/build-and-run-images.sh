@@ -150,3 +150,9 @@ run "-p 50051 -e PORT=50051 \
      -e DISABLE_STATS=1 \
      -e DISABLE_TRACING=1 \
      -e DISABLE_PROFILER=1" "$containername"
+
+containername=loadgenerator
+run "-e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     -e FRONTEND_ADDR=frontend:8080 \
+     -e USERS=10" "$containername"

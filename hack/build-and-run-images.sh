@@ -67,7 +67,6 @@ docker run -d --rm --network="$networkName" --name jaeger \
   -p 9411:9411 \
   jaegertracing/all-in-one:1.30 || true
 
-
 containername=$otelCollectorName
 run "" "$containername"
 

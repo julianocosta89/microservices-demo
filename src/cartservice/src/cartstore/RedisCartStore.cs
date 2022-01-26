@@ -51,6 +51,12 @@ namespace cartservice.cartstore
             redisConnectionOptions.KeepAlive = 180;
         }
 
+        public ConnectionMultiplexer GetConnection()
+        {
+            EnsureRedisConnected();
+            return redis;
+        }
+
         public Task InitializeAsync()
         {
             EnsureRedisConnected();

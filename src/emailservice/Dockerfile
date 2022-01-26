@@ -12,16 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.10-slim as base
-
-FROM base as builder
-
-RUN apt-get -qq update \
-    && apt-get install -y --no-install-recommends \
-        g++ \
-    && rm -rf /var/lib/apt/lists/*
-
-FROM base as final
+FROM python:3.10-slim
 
 # get packages
 COPY requirements.txt .

@@ -133,9 +133,9 @@ run "-p 50051 -e PORT=50051 \
 
 containername=productcatalogservice
 run "-p 3550 -e PORT=3550 \
-     -e DISABLE_STATS=1 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1" "$containername"
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     " "$containername"
 
 containername=recommendationservice
 run "-p 8080 -e PORT=8080 \

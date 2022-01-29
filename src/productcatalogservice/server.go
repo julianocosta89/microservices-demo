@@ -147,21 +147,16 @@ func run(port string) string {
 		grpc.StreamInterceptor(otelgrpc.StreamServerInterceptor()),
 	)
 
-	pc := &productCatalog{}
-	hs := &healthServer{}
+	svc := &productCatalog{}
 
-	pb.RegisterProductCatalogServiceServer(srv, pc)
-	healthpb.RegisterHealthServer(srv, hs)
+	pb.RegisterProductCatalogServiceServer(srv, svc)
+	healthpb.RegisterHealthServer(srv, svc)
 	go srv.Serve(l)
 	return l.Addr().String()
 }
 
 type productCatalog struct {
 	pb.UnimplementedProductCatalogServiceServer
-}
-
-type healthServer struct {
-	healthpb.UnimplementedHealthServer
 }
 
 func readCatalogFile(catalog *pb.ListProductsResponse) error {

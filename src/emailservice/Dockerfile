@@ -23,7 +23,7 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt-get -qq update \
     && apt-get install -y --no-install-recommends \
-        wget
+    wget
 
 # Download the grpc health probe
 RUN GRPC_HEALTH_PROBE_VERSION=v0.4.6 && \

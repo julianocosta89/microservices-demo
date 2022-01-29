@@ -139,10 +139,11 @@ run "-p 3550 -e PORT=3550 \
 
 containername=recommendationservice
 run "-p 8080 -e PORT=8080 \
-     -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550
-     -e DISABLE_DEBUGGER=1 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1" "$containername"
+     -e OTEL_PYTHON_LOG_CORRELATION=true \
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550 \
+     " "$containername"
 
 containername=shippingservice
 run "-p 50051 -e PORT=50051 \

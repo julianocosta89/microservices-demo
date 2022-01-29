@@ -35,7 +35,7 @@ jinja2==3.0.3
     # via -r requirements.in
 markupsafe==2.0.1
     # via jinja2
-opentelemetry-api==1.8.0
+opentelemetry-api==1.9.0
     # via
     #   -r requirements.in
     #   opentelemetry-exporter-otlp-proto-grpc
@@ -43,25 +43,25 @@ opentelemetry-api==1.8.0
     #   opentelemetry-instrumentation-grpc
     #   opentelemetry-instrumentation-jinja2
     #   opentelemetry-sdk
-opentelemetry-exporter-otlp-proto-grpc==1.8.0
+opentelemetry-exporter-otlp-proto-grpc==1.9.0
     # via -r requirements.in
-opentelemetry-instrumentation==0.27b0
+opentelemetry-instrumentation==0.28b0
     # via
     #   -r requirements.in
     #   opentelemetry-instrumentation-grpc
     #   opentelemetry-instrumentation-jinja2
-opentelemetry-instrumentation-grpc==0.27b0
+opentelemetry-instrumentation-grpc==0.28b0
     # via -r requirements.in
-opentelemetry-instrumentation-jinja2==0.27b0
+opentelemetry-instrumentation-jinja2==0.28b0
     # via -r requirements.in
-opentelemetry-proto==1.8.0
+opentelemetry-proto==1.9.0
     # via opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-sdk==1.8.0
+opentelemetry-sdk==1.9.0
     # via
     #   -r requirements.in
     #   opentelemetry-exporter-otlp-proto-grpc
     #   opentelemetry-instrumentation-grpc
-opentelemetry-semantic-conventions==0.27b0
+opentelemetry-semantic-conventions==0.28b0
     # via
     #   opentelemetry-instrumentation-grpc
     #   opentelemetry-sdk
@@ -90,6 +90,8 @@ six==1.15.0
     #   google-auth
     #   grpcio
     #   protobuf
+typing-extensions==4.0.1
+    # via opentelemetry-sdk
 urllib3==1.25.10
     # via requests
 wrapt==1.13.3

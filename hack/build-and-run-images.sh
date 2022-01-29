@@ -10,7 +10,10 @@ log() { echo "$1" >&2; }
 # shellcheck disable=SC2086
 run() { 
     log "$2"
-    docker run -d --rm --network=$networkName $1 --name $2 $2:$TAG >&2 || true
+    docker run -d --rm --network=$networkName \
+    -e OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$otelCollector \
+    -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+    $1 --name $2 $2:$TAG >&2 || true
 }
 
 check_network() {
@@ -67,8 +70,11 @@ docker run -d --rm --network="$networkName" --name jaeger \
   -p 9411:9411 \
   jaegertracing/all-in-one:1.30 || true
 
-containername=$otelCollectorName
-run "" "$containername"
+containername="$otelCollectorName"
+docker run -d --rm --network="$networkName" \
+     --name "$otelCollectorName" \
+     "$otelCollectorName:$TAG" >&2 || true
+
 
 log "Deploying Online Boutique:"
 
@@ -79,20 +85,14 @@ docker run -d --rm --network="$networkName" \
 
 containername=adservice
 run "-p 9555 -e PORT=9555 \
-     -e OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      " "$containername"
 
 containername=cartservice
 run "-p 7070 -e REDIS_ADDR=redis-cart:6379 \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      " "$containername"
 
 containername=checkoutservice
 run "-p 5050 -e PORT=5050 \
-     -e OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550 \
      -e SHIPPING_SERVICE_ADDR=shippingservice:50051 \
      -e PAYMENT_SERVICE_ADDR=paymentservice:50051 \
@@ -102,21 +102,15 @@ run "-p 5050 -e PORT=5050 \
 
 containername=currencyservice
 run "-p 7000 -e PORT=7000 \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      " "$containername"
 
 containername=emailservice
 run "-p 8080 -e PORT=8080 \
      -e OTEL_PYTHON_LOG_CORRELATION=true \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      " "$containername"
 
 containername=frontend
 run "-p 8080:8080 -e PORT=8080 \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550 \
      -e SHIPPING_SERVICE_ADDR=shippingservice:50051 \
      -e CURRENCY_SERVICE_ADDR=currencyservice:7000 \
@@ -127,32 +121,22 @@ run "-p 8080:8080 -e PORT=8080 \
 
 containername=paymentservice
 run "-p 50051 -e PORT=50051 \
-     -e DISABLE_DEBUGGER=1 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1" "$containername"
+     " "$containername"
 
 containername=productcatalogservice
 run "-p 3550 -e PORT=3550 \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      " "$containername"
 
 containername=recommendationservice
 run "-p 8080 -e PORT=8080 \
      -e OTEL_PYTHON_LOG_CORRELATION=true \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      -e PRODUCT_CATALOG_SERVICE_ADDR=productcatalogservice:3550 \
      " "$containername"
 
 containername=shippingservice
 run "-p 50051 -e PORT=50051 \
-     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
      " "$containername"
 
 containername=loadgenerator
-run "-e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
-     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
-     -e FRONTEND_ADDR=frontend:8080 \
+run "-e FRONTEND_ADDR=frontend:8080 \
      -e USERS=10" "$containername"

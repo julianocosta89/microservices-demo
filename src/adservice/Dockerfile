@@ -27,7 +27,6 @@ RUN ./gradlew installDist
 
 FROM openjdk:17-slim
 
-# Download Stackdriver Profiler Java agent
 RUN apt-get -y update && apt-get install -qqy \
     wget \
     && rm -rf /var/lib/apt/lists/*

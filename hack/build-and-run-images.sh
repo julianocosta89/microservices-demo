@@ -102,9 +102,9 @@ run "-p 5050 -e PORT=5050 \
 
 containername=currencyservice
 run "-p 7000 -e PORT=7000 \
-     -e DISABLE_DEBUGGER=1 \
-     -e DISABLE_TRACING=1 \
-     -e DISABLE_PROFILER=1" "$containername"
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
+     -e OTEL_RESOURCE_ATTRIBUTES=service.name=$containername,service.version=$TAG \
+     " "$containername"
 
 containername=emailservice
 run "-p 8080 -e PORT=8080 \

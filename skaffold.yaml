@@ -44,6 +44,8 @@ build:
     context: src/frontend
   - image: adservice
     context: src/adservice
+  - image: otelcollector
+    context: src/otelcollector
   tagPolicy:
     gitCommit: {}
   local:
@@ -57,6 +59,8 @@ deploy:
     - ./kubernetes-manifests/currencyservice.yaml
     - ./kubernetes-manifests/emailservice.yaml
     - ./kubernetes-manifests/frontend.yaml
+    - ./kubernetes-manifests/jaeger.yaml
+    - ./kubernetes-manifests/otelcollector.yaml
     - ./kubernetes-manifests/paymentservice.yaml
     - ./kubernetes-manifests/productcatalogservice.yaml
     - ./kubernetes-manifests/recommendationservice.yaml

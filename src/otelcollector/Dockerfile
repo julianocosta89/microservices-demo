@@ -1,4 +1,4 @@
-FROM otel/opentelemetry-collector:0.42.0
+FROM otel/opentelemetry-collector-contrib:0.43.0
 COPY conf.yml .
 EXPOSE 1888
 EXPOSE 8888

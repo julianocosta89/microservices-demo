@@ -1,12 +1,14 @@
-google-api-core==1.24.1
-grpcio-health-checking==1.33.2
-grpcio==1.33.2
-jinja2==2.11.3
-opencensus==0.7.11
-opencensus-ext-stackdriver==0.7.3
-opencensus-ext-grpc==0.7.1
-python-json-logger==0.1.11
-google-cloud-profiler==1.1.2
-google-cloud-trace==0.24.0
+google-api-core==2.4.0
+grpcio-health-checking==1.43.0
+grpcio==1.43.0
+jinja2==3.0.3
+opentelemetry-api==1.9.0
+opentelemetry-exporter-otlp-proto-grpc==1.9.0
+opentelemetry-instrumentation==0.28b0
+opentelemetry-instrumentation-grpc==0.28b0
+opentelemetry-instrumentation-jinja2==0.28b0
+# follow https://github.com/open-telemetry/opentelemetry-python-contrib/issues/810
+#opentelemetry-instrumentation-logging==0.28b0
+opentelemetry-sdk==1.9.0
+python-json-logger==2.0.2
 requests==2.27.1
-urllib3==1.26.5

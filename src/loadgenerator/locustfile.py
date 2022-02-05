@@ -17,6 +17,21 @@
 import random
 from locust import HttpUser, TaskSet, between
 
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import (BatchSpanProcessor)
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.instrumentation.urllib3 import URLLib3Instrumentor
+
+tracer_provider = TracerProvider()
+trace.set_tracer_provider(tracer_provider)
+tracer_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+
+# Instrumenting manually to avoid error with locust gevent monkey
+RequestsInstrumentor().instrument()
+URLLib3Instrumentor().instrument()
+
 products = [
     '0PUK6V6EV0',
     '1YMWWN1N4O',

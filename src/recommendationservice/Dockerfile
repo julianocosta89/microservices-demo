@@ -12,22 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.7-slim
-RUN apt-get update -qqy && \
-	apt-get -qqy install wget g++ && \
-	rm -rf /var/lib/apt/lists/*
+FROM python:3.10-slim
+
+# get packages
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 # show python logs as they occur
 ENV PYTHONUNBUFFERED=0
+
+RUN apt-get -qq update \
+    && apt-get install -y --no-install-recommends \
+    wget
 
 # download the grpc health probe
 RUN GRPC_HEALTH_PROBE_VERSION=v0.4.6 && \
     wget -qO/bin/grpc_health_probe https://github.com/grpc-ecosystem/grpc-health-probe/releases/download/${GRPC_HEALTH_PROBE_VERSION}/grpc_health_probe-linux-amd64 && \
     chmod +x /bin/grpc_health_probe
 
-# get packages
 WORKDIR /recommendationservice
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
 
 # add files into working directory
 COPY . .
@@ -36,4 +39,4 @@ COPY . .
 ENV PORT "8080"
 EXPOSE 8080
 
-ENTRYPOINT ["python", "/recommendationservice/recommendation_server.py"]
+ENTRYPOINT ["opentelemetry-instrument", "python", "recommendation_server.py"]

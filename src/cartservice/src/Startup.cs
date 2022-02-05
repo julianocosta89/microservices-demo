@@ -9,6 +9,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using cartservice.cartstore;
 using cartservice.services;
+using OpenTelemetry.Trace;
 
 namespace cartservice
 {
@@ -24,25 +25,32 @@ namespace cartservice
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
-        {
+        {                
             string redisAddress = Configuration["REDIS_ADDR"];
-            ICartStore cartStore = null;
-            if (!string.IsNullOrEmpty(redisAddress))
+            RedisCartStore cartStore = null;
+            if (string.IsNullOrEmpty(redisAddress))
             {
-                cartStore = new RedisCartStore(redisAddress);
+                Console.WriteLine("Redis cache host(hostname+port) was not specified.");
+                Console.WriteLine("This sample was modified to showcase OpenTelemetry RedisInstrumentation.");
+                Console.WriteLine("REDIS_ADDR environment variable is required.");
+                System.Environment.Exit(1);
             }
-            else
-            {
-                Console.WriteLine("Redis cache host(hostname+port) was not specified. Starting a cart service using local store");
-                Console.WriteLine("If you wanted to use Redis Cache as a backup store, you should provide its address via command line or REDIS_ADDR environment variable.");
-                cartStore = new LocalCartStore();
-            }
+            cartStore = new RedisCartStore(redisAddress);
 
             // Initialize the redis store
             cartStore.InitializeAsync().GetAwaiter().GetResult();
             Console.WriteLine("Initialization completed");
 
             services.AddSingleton<ICartStore>(cartStore);
+
+            services.AddOpenTelemetryTracing((builder) => builder
+                .AddRedisInstrumentation(
+                    cartStore.GetConnection(),
+                    options => options.SetVerboseDatabaseStatements = true)
+                .AddAspNetCoreInstrumentation()
+                .AddGrpcClientInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddOtlpExporter());
 
             services.AddGrpc();
         }

@@ -14,11 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gke_frontend_genproto]
-
 PATH=$PATH:$GOPATH/bin
 protodir=../../pb
 
 protoc --go-grpc_out=. --go_out=. -I $protodir $protodir/demo.proto
-
-# [END gke_frontend_genproto]

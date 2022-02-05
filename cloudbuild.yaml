@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudbuild_microservice_demo_cloudbuild]
-
 # This configuration file is used to build and deploy the app into a
 # GKE cluster using Google Cloud Build.
 #
@@ -39,5 +37,3 @@ steps:
 timeout: '3600s'
 options:
   machineType: 'N1_HIGHCPU_8'
-  
-# [END cloudbuild_microservice_demo_cloudbuild]

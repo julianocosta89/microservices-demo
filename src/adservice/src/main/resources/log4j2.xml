@@ -18,10 +18,7 @@
 <Configuration status="WARN">
   <Appenders>
     <Console name="STDOUT" target="SYSTEM_OUT">
-      <JsonLayout compact="true" eventEol="true">
-        <KeyValuePair key="time" value="$${date:yyyy-MM-dd}T$${date:HH:mm:ss.SSS}Z"/>
-     </JsonLayout>
-
+        <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg trace_id=%X{trace_id} span_id=%X{span_id} trace_flags=%X{trace_flags} %n"/>
     </Console>
   </Appenders>
   <Loggers>

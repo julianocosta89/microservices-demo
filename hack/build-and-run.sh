@@ -89,6 +89,7 @@ run "-p 9555 -e PORT=9555 \
 
 containername=cartservice
 run "-p 7070 -e REDIS_ADDR=redis-cart:6379 \
+     -e OTEL_EXPORTER_OTLP_ENDPOINT=$otelCollector \
      " "$containername"
 
 containername=checkoutservice

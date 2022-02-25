@@ -53,7 +53,7 @@ markupsafe==2.0.1
     # via jinja2
 msgpack==1.0.0
     # via locust
-opentelemetry-api==1.8.0
+opentelemetry-api==1.9.1
     # via
     #   -r requirements.in
     #   opentelemetry-exporter-otlp-proto-grpc
@@ -61,29 +61,29 @@ opentelemetry-api==1.8.0
     #   opentelemetry-instrumentation-requests
     #   opentelemetry-instrumentation-urllib3
     #   opentelemetry-sdk
-opentelemetry-exporter-otlp-proto-grpc==1.8.0
+opentelemetry-exporter-otlp-proto-grpc==1.9.1
     # via -r requirements.in
-opentelemetry-instrumentation==0.27b0
+opentelemetry-instrumentation==0.28b1
     # via
     #   -r requirements.in
     #   opentelemetry-instrumentation-requests
     #   opentelemetry-instrumentation-urllib3
-opentelemetry-instrumentation-requests==0.27b0
+opentelemetry-instrumentation-requests==0.28b1
     # via -r requirements.in
-opentelemetry-instrumentation-urllib3==0.27b0
+opentelemetry-instrumentation-urllib3==0.28b1
     # via -r requirements.in
-opentelemetry-proto==1.8.0
+opentelemetry-proto==1.9.1
     # via opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-sdk==1.8.0
+opentelemetry-sdk==1.9.1
     # via
     #   -r requirements.in
     #   opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-semantic-conventions==0.27b0
+opentelemetry-semantic-conventions==0.28b1
     # via
     #   opentelemetry-instrumentation-requests
     #   opentelemetry-instrumentation-urllib3
     #   opentelemetry-sdk
-opentelemetry-util-http==0.27b0
+opentelemetry-util-http==0.28b1
     # via
     #   opentelemetry-instrumentation-requests
     #   opentelemetry-instrumentation-urllib3
@@ -107,7 +107,9 @@ six==1.15.0
     #   geventhttpclient
     #   grpcio
 typing-extensions==4.0.1
-    # via locust
+    # via
+    #   locust
+    #   opentelemetry-sdk
 urllib3==1.26.8
     # via
     #   -r requirements.in

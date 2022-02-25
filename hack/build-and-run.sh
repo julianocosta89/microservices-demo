@@ -68,7 +68,7 @@ docker run -d --rm --network="$networkName" --name jaeger \
   -p 14268:14268 \
   -p 14269:14269 \
   -p 9411:9411 \
-  jaegertracing/all-in-one:1.30 || true
+  jaegertracing/all-in-one:1.31 || true
 
 containername="$otelCollectorName"
 docker run -d --rm --network="$networkName" \

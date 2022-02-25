@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: jaeger
-        image: jaegertracing/all-in-one:1.30
+        image: jaegertracing/all-in-one:1.31
         env:
         - name: COLLECTOR_ZIPKIN_HOST_PORT
           value: ":9411"

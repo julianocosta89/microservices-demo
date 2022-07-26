@@ -25,8 +25,20 @@ spec:
       labels:
         app: redis-cart
     spec:
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: false
+        runAsUser: 1000
       containers:
       - name: redis
+        securityContext:
+          allowPrivilegeEscalation: true
+          capabilities:
+            drop:
+              - all
+          privileged: false
+          readOnlyRootFilesystem: true
         image: redis:alpine
         ports:
         - containerPort: 6379
@@ -61,6 +73,6 @@ spec:
   selector:
     app: redis-cart
   ports:
-  - name: redis
+  - name: tls-redis
     port: 6379
     targetPort: 6379

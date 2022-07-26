@@ -11,10 +11,15 @@ exporters:
       insecure: true
   logging:
     loglevel: debug
+  otlphttp:
+    traces_endpoint: https://production.cisco-udp.com/trace-collector
+    headers:
+      authorization: "Bearer your_key_here"
+    compression: gzip
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: []
-      exporters: [logging,jaeger]
+      exporters: [otlphttp,logging,jaeger]
